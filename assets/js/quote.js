@@ -91,10 +91,14 @@ $(document).ready(function () {
         getProdRange();
     };
 
+    /* REQUIRED ELEVATORS + N. OF ELEVATORS: update systematically */
     function setRequiredElevatorsResult(finNumElev) {
-        
+        if ( ($("#residential").hasClass("active")) && ($('#numApp').val() && $('#numFloors').val()) ) {
+            $("numElev_3").val()
+        }
         $("#numElev_2, #numElev_3").val(parseFloat(finNumElev));
     };
+    /* REQUIRED ELEVATORS + N. OF ELEVATORS: update systematically */
 
     function setPricesResults(finNumElev, roughTotal, installFee, total) {
         $("#elevTotal").val(parseFloat(roughTotal).toFixed(2) + " $");
@@ -113,6 +117,9 @@ $(document).ready(function () {
         return {
             numberApp: numApp,
             numberFloors: numFloors,
+            /* NUM. OF ELEVATOR SHAFT: send info */
+            numElev: numElev,
+            /* /NUM. OF ELEVATOR SHAFT: send info */
             numberBase: numBase,
             maximumOcc: maxOcc,
             productRange: prodRange,
