@@ -66,7 +66,9 @@ $(document).ready(function () {
 
         } else if ($('#premium').is(':checked')) {
             prodRange.type = "premium";
-            prodRange.price = parseFloat(123456);
+            /* 9) PREMIUM calculation */
+            prodRange.price = parseFloat(12345);
+            /* /9) PREMIUM calculation */
             prodRange.installationFeePercentage = 0.13;
             return prodRange;
 
