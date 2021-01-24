@@ -84,6 +84,9 @@ $(document).ready(function () {
     };
 
     function GetInfos() {
+        /* 4) NUM APP: send info */
+        getInfoNumApp();
+        /* /4) NUM APP: send info */
         getInfoNumFloors();
         getInfoNumBase();
         getInfoNumElev();
@@ -91,14 +94,9 @@ $(document).ready(function () {
         getProdRange();
     };
 
-    /* REQUIRED ELEVATORS + N. OF ELEVATORS: update systematically */
     function setRequiredElevatorsResult(finNumElev) {
-        if ( ($("#residential").hasClass("active")) && ($('#numApp').val() && $('#numFloors').val()) ) {
-            $("numElev_3").val()
-        }
         $("#numElev_2, #numElev_3").val(parseFloat(finNumElev));
     };
-    /* REQUIRED ELEVATORS + N. OF ELEVATORS: update systematically */
 
     function setPricesResults(finNumElev, roughTotal, installFee, total) {
         $("#elevTotal").val(parseFloat(roughTotal).toFixed(2) + " $");
@@ -117,9 +115,9 @@ $(document).ready(function () {
         return {
             numberApp: numApp,
             numberFloors: numFloors,
-            /* NUM. OF ELEVATOR SHAFT: send info */
-            numElev: numElev,
-            /* /NUM. OF ELEVATOR SHAFT: send info */
+            /* 6) NUM. OF ELEVATOR SHAFT: send info */
+            numberElev: numElev,
+            /* /6) NUM. OF ELEVATOR SHAFT: send info */
             numberBase: numBase,
             maximumOcc: maxOcc,
             productRange: prodRange,
@@ -208,8 +206,11 @@ $(document).ready(function () {
     function doCalc() {
         if ($('#residential').hasClass('active') && !negativeValues() && $('#numApp').val() && $('#numFloors').val()) {
             apiCall('residential')
-        } else if ($('#commercial').hasClass('active') && !negativeValues() && $('#numElev').val()  && $('#numPark').val()) {
+        } 
+        /* 5) NUM. OF ELEVATOR SHAFT => REQUIRED ELEVATORS + N. OF ELEVATORS */
+          else if ($('#commercial').hasClass('active') && !negativeValues() && $('#numElev').val()) {
             apiCall('commercial')
+        /* 5) NUM. OF ELEVATOR SHAFT => REQUIRED ELEVATORS + N. OF ELEVATORS */
         } else if ($('#corporate').hasClass('active') && !negativeValues() && $('#numFloors').val() && $('#numBase').val() && $('#maxOcc').val()) {
             apiCall('corporate')
         /* 8) HYBRID: didn't work at all  */
