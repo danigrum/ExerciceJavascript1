@@ -13,10 +13,19 @@ $(document).ready(function () {
     });
 
 
-    $('#standart, #premium, #excelium').on('click', function () {
-        document.getElementById('elevPriceUnit').value = (7565).toFixed(2) + " $";
+    /* 1) UNIT PRICE: show the price when selected (only had for "standard") */
+    $('#standard, #premium, #excelium').on('click', function () {
+        if ($("#standard").is(":checked")) {
+            document.getElementById('elevPriceUnit').value = (7565).toFixed(2) + " $";
+        }
+        else if ($("#premium").is(":checked")) {
+            document.getElementById('elevPriceUnit').value = (12345).toFixed(2) + " $";
+        } else {
+            document.getElementById('elevPriceUnit').value = (15400).toFixed(2) + " $";
+        }
         doCalc();
     });
+    /* /1) UNIT PRICE: show the price when selected (only had for "standard") */
 
     $('#residential, #commercial, #corporate, #hybrid').on('click', function () {
         initialize();
@@ -57,7 +66,9 @@ $(document).ready(function () {
 
         } else if ($('#premium').is(':checked')) {
             prodRange.type = "premium";
-            prodRange.price = parseFloat(123456);
+            /* 9) PREMIUM calculation */
+            prodRange.price = parseFloat(12345);
+            /* /9) PREMIUM calculation */
             prodRange.installationFeePercentage = 0.13;
             return prodRange;
 
@@ -75,6 +86,9 @@ $(document).ready(function () {
     };
 
     function GetInfos() {
+        /* 4) NUM APP: send info */
+        getInfoNumApp();
+        /* /4) NUM APP: send info */
         getInfoNumFloors();
         getInfoNumBase();
         getInfoNumElev();
@@ -92,15 +106,20 @@ $(document).ready(function () {
         $("#total_").val(parseFloat(total).toFixed(2) + " $");
     };
 
+    /* 2) N. OF ELEVATORS delete information when mandatory field is empty */
     function emptyElevatorsNumberAndPricesFields() {
-        $('#numElev_3').val('');
+        $('#numElev_2, #numElev_3').val('');
         $('.priceField').val('');
     };
+    /* /2) N. OF ELEVATORS delete information when mandatory field is empty */
 
     function createFormData(projectType) {
         return {
             numberApp: numApp,
             numberFloors: numFloors,
+            /* 6) NUM. OF ELEVATOR SHAFT: send info */
+            numberElev: numElev,
+            /* /6) NUM. OF ELEVATOR SHAFT: send info */
             numberBase: numBase,
             maximumOcc: maxOcc,
             productRange: prodRange,
@@ -114,6 +133,14 @@ $(document).ready(function () {
             alert("Please enter a positive number!");
             $('#numApp').val('');
             return true
+
+    /* 3) NUM OF FLOORS: can't be negative */    
+    } else if ($('#numFloors').val() < 0) {
+
+        alert("Please enter a positive number!");
+        $('#numFloors').val('');
+        return true
+    /* /3) NUM OF FLOORS: can't be negative */   
 
         } else if ($('#numBase').val() < 0) {
 
@@ -181,10 +208,17 @@ $(document).ready(function () {
     function doCalc() {
         if ($('#residential').hasClass('active') && !negativeValues() && $('#numApp').val() && $('#numFloors').val()) {
             apiCall('residential')
-        } else if ($('#commercial').hasClass('active') && !negativeValues() && $('#numElev').val()  && $('#numPark').val()) {
+        } 
+        /* 5) NUM. OF ELEVATOR SHAFT => REQUIRED ELEVATORS + N. OF ELEVATORS */
+          else if ($('#commercial').hasClass('active') && !negativeValues() && $('#numElev').val()) {
             apiCall('commercial')
+        /* 5) NUM. OF ELEVATOR SHAFT => REQUIRED ELEVATORS + N. OF ELEVATORS */
         } else if ($('#corporate').hasClass('active') && !negativeValues() && $('#numFloors').val() && $('#numBase').val() && $('#maxOcc').val()) {
-            apiCall('commercial')
+            apiCall('corporate')
+        /* 8) HYBRID: didn't work at all  */
+        } else if ($('#hybrid').hasClass('active') && !negativeValues() && $('#numFloors').val() && $('#numBase').val() && $('#maxOcc').val()) {
+            apiCall('hybrid')
+        /* /8) HYBRID: didn't work at all  */
         } else {
             emptyElevatorsNumberAndPricesFields();
         };
